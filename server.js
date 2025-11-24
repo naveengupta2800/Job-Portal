@@ -22,8 +22,10 @@ app.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }, //secure:true when using https
+    saveUninitialized: false,
+    cookie: { secure: false,
+      maxAge: 24 * 60 * 60 * 1000
+     }, //secure:true when using https
   })
 );
 
@@ -44,6 +46,27 @@ const userSchema = new mongoose.Schema({
   otpExpire: Date,
   isVerified: { type: Boolean, default: false },
 
+  //profile
+  phone:String,
+  address:String,
+  skills: [String],
+  education : [
+    {
+      school:String,
+      degree: String,
+      year: String,
+    }
+  ],
+  experience: [
+    {
+      company: String,
+      title: String,
+      years: String
+    }
+  ],
+ },
+ {
+  timestamps: true 
 });
 const User = mongoose.model('User', userSchema);
 
@@ -164,6 +187,85 @@ app.post('/login', async(req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+app.get('/profile',async(req,res)=> {
+  try {
+      const token = req.session.token;
+      if(!token){
+        return res.status(401).json({message: 'Unautorized user'});
+      }
+      const decoded = jwt.verify(token,JWT_SECRET);
+      
+        const user = await User.findById(decoded.userId).select('-password -otp -otpExpire');
+          if(!user) {
+            return res.status(404).json({message :'User not found'});
+          };
+          if(user.role!=='jobseeker'){
+            return res.status(403).json({message:'"Only jobseekers can access profile'})
+          };
+          return res.json({
+          message :'Profile fetched successfully',
+          profile :{
+
+          name:user.name,
+          email:user.email,
+          role:user.role,
+          phone: user.phone|| null,
+          address: user.address|| null,
+          skills: user.skills|| [],
+          education: user.education || [],
+          experience: user.experience || []
+          }
+         });
+  }
+        catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'Server error' });
+  }
+});
+app.put('/profile-update', async(req,res) => {
+  try {
+    const token = req.session.token;
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized user' });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId).select('-password -otp -otpExpire');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    if (user.role !== 'jobseeker') {
+      return res.status(403).json({ message: 'Only jobseekers can access profile' });
+    }
+
+    const allowed = ['name', 'phone', 'address', 'skills', 'education', 'experience'];
+    const updates = {};
+
+    for (const key in req.body) {
+      if (allowed.includes(key)) {
+        updates[key] = req.body[key];
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updates },
+      { new: true }
+    ).select('-password -otp -otpExpire');
+
+    res.json({ message: 'Profile updated successfully', profile: updatedUser });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
 );
