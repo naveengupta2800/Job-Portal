@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
+const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
 
@@ -23,6 +24,7 @@ app.use(
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: MONGO_URI }),
     cookie: { secure: false,
       maxAge: 24 * 60 * 60 * 1000
      }, //secure:true when using https
@@ -446,6 +448,12 @@ app.put('/jobs/update/:jobId',async(req,res)=> {
     if (!jobId) {
       return res.status(400).json({ message: "Job ID is required" });
     }
+    const job = await Job.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    if (job.recruiterId.toString() !== user._id.toString()) {
+      return res.status(403).json({ message: "You can update only your own jobs" });
+    }
     const allowed = ['title','description','location','company','salary','experience','skillsRequired','employmentType'];
     const updates = {};
     for(const key in req.body){
@@ -466,6 +474,79 @@ app.put('/jobs/update/:jobId',async(req,res)=> {
   catch(err){
     console.log(err);
     return res.status(500).json({message:"Server error"});
+  }
+});
+app.get('/jobs/recruiter/all',async(req,res)=> {
+  try {
+    const token = req.session.token;
+    if(!token){
+      return res.status(401).json({
+        message:"Unautorized User"
+      });
+    }
+    const decoded = jwt.verify(token,JWT_SECRET);
+    const user = await User.findById(decoded.userId).select("-password -otp -otpExpire");
+    if(!user) { return res.status(404).json({message: "User not found"});
+  }
+    if(user.role !== 'recruiter') {
+      return res.status(403).json({message:"Access Denied, not a recruiter"});
+    }
+    const jobs = await Job.find({recruiterId : user._id});
+    res.json({
+      message:"Your posted Jobs",
+      totalJobs: jobs.length,
+      jobs
+    });
+  }
+ 
+catch(err){
+  console.log(err);
+   return res.status(500).json({message:"Server error"});
+}
+});
+app.get('/jobs/:jobid',async(req,res)=> {
+  try {
+    const job = await Job.findById(req.params.jobid);
+    if(!job){
+      return res.status(404).json({message:"job not found"});
+    }
+    res.json({
+      message:'Job Details',
+      job
+    });
+  }
+  catch(err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+app.delete('/job/delete/:jobid', async (req, res) => {
+  try {
+    const token = req.session.token;
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized User" });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.userId).select("-password -otp -otpExpire");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.role !== 'recruiter') {
+      return res.status(403).json({ message: 'Access Denied, not a recruiter' });
+    }
+
+    const job = await Job.findById(req.params.jobid);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    if (job.recruiterId.toString() !== user._id.toString()) {
+      return res.status(403).json({ message: "You can delete only your jobs" });
+    }
+
+    await Job.findByIdAndDelete(req.params.jobid);
+    res.json({ message: "Job deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
