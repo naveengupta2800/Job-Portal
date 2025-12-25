@@ -15,24 +15,34 @@ const profileRoutes = require("./routes/profileRoutes");
 // Initialize app
 const app = express();
 
-// -------------------- IMPORTANT --------------------
-// TRUST PROXY for Render cookies
+// -------------------- TRUST PROXY (Render Required) --------------------
 app.set("trust proxy", 1);
 
-// Body Parsers
+// -------------------- BODY PARSERS --------------------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// -------------------- CORS FIX --------------------
+// -------------------- CORS (FINAL FIX) --------------------
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://job-portal-naveengupta2800s-projects.vercel.app"
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://job-portal-naveengupta2800s-projects.vercel.app"
-    ],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
+
+// Preflight support
+app.options("*", cors());
 
 // -------------------- SESSION --------------------
 app.use(
@@ -43,7 +53,7 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", 
+      secure: process.env.NODE_ENV === "production",     // Render = true
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
     },
@@ -66,7 +76,7 @@ app.get("/", (req, res) => {
   res.send("Job Portal API is running...");
 });
 
-// Error middleware
+// -------------------- ERROR HANDLER --------------------
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Server Error" });
@@ -74,6 +84,4 @@ app.use((err, req, res, next) => {
 
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
