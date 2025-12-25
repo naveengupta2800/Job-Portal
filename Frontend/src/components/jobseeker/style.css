@@ -1,0 +1,715 @@
+/* =====================================================
+   ROOT THEME
+===================================================== */
+:root {
+  --sidebar-width: 240px;
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --success: #10b981;
+  --danger: #dc2626;
+
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+
+  --border: #e5e7eb;
+  --radius: 14px;
+}
+
+@media (max-width: 800px) {
+  :root {
+    --sidebar-width: 200px;
+  }
+}
+
+/* =====================================================
+   RESET
+===================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-dark);
+}
+
+/* =====================================================
+   SIDEBAR (RECRUITER)
+===================================================== */
+.recruiter-sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #1e293b;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+  border-right: 1px solid #334155;
+  z-index: 1000;
+}
+
+.recruiter-sidebar .logo {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-links a {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  text-decoration: none;
+  color: #cbd5e1;
+}
+
+.nav-links a:hover {
+  background: #334155;
+}
+
+.nav-links a.active {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* =====================================================
+   MAIN CONTENT OFFSET (IMPORTANT)
+===================================================== */
+.dashboard-container,
+.jobs-layout,
+.profile-container,
+.job,
+.applications-table-container,
+.saved-jobs-container,
+.job-apply-container,
+.container {
+  margin-left: 50px;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* =====================================================
+   NAVBAR (JOBSEEKER)
+===================================================== */
+.navbar {
+  background: #fff;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.navbar .nav-links {
+  flex-direction: row;
+  gap: 18px;
+}
+
+.navbar .nav-links a {
+  color: black;
+  font-weight: 500;
+}
+
+/* =====================================================
+   HEADERS
+===================================================== */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.header-row h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.center {
+  text-align: center;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background-color:#f44336;
+  color: #ffffff;
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn.secondary {
+  background: var(--success);
+  color: #fff;
+}
+
+.btn.secondary:hover {
+  background: #059669;
+}
+
+.btn.outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dark);
+}
+
+.btn.outline:hover {
+  background: var(--text-dark);
+  color: #fff;
+}
+
+.btn.danger,
+.btn.delete {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* =====================================================
+   TABLES (GLOBAL)
+===================================================== */
+.table-wrapper {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f1f5f9;
+}
+
+th, td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  text-align: left;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+.actions,
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-cards .card {
+  background: var(--bg-card);
+  padding: 18px;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.summary-cards .count {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   JOB LISTINGS (RECRUITER)
+===================================================== */
+.jobs-layout {
+  display: flex;
+  gap: 16px;
+}
+
+.jobs-left {
+  flex: 3;
+}
+
+.jobs-right {
+  flex: 2;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: none;
+}
+
+.jobs-right.open {
+  display: block;
+}
+
+.job-details-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-panel {
+  color: red;
+  text-align: center;
+}
+
+/* =====================================================
+   JOB CARDS (JOBSEEKER)
+===================================================== */
+.grid {
+  display: flex;
+  flex-wrap: wrap;      /* cards next line me jayenge */
+  gap: 16px;            /* cards ke beech gap */
+  margin: 20px;         /* poore grid ka outer margin */
+}
+
+
+.job-card {
+  background: var(--bg-card);
+  padding: 18px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.15);
+}
+.job-details{
+ margin: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+}
+.job-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+
+.profile-container {
+  /* Size & Layout */
+  max-width: 900px;
+  margin: 20px auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  /* Spacing */
+  padding: 28px 30px;
+
+  /* Background & Shape */
+  background: var(--bg-card);
+  border-radius: 18px;
+
+  /* Border & Depth */
+  border: 1px solid var(--border);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.12),
+    0 4px 10px rgba(0, 0, 0, 0.06);
+
+  /* Typography */
+  color: var(--text-dark);
+  font-size: 15px;
+  line-height: 1.65;
+
+  /* UX polish */
+  position: relative;
+  overflow: hidden;
+
+  /* Animation */
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+/* ✨ Hover elevation */
+.profile-container:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.18),
+    0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* =====================================
+   OPTIONAL: TOP ACCENT BAR (SaaS look)
+===================================== */
+.profile-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #22c55e,
+    #06b6d4
+  );
+}
+
+/* =====================================
+   PROFILE ITEMS (inside)
+===================================== */
+.profile-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+
+  font-size: 14px;
+}
+
+.profile-item:last-child {
+  border-bottom: none;
+}
+
+.profile-item strong {
+  min-width: 140px;
+  color: #334155;
+  font-weight: 600;
+}
+
+/* =====================================
+   IMAGE SECTION
+===================================== */
+.image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  border: 3px solid #e5e7eb;
+  background: #fff;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.profile-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .profile-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-item strong {
+    min-width: unset;
+  }
+}
+
+
+.image-section {
+  text-align: center;
+}
+
+.profile-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.edit-form {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  /* Spacing */
+  padding: 24px;
+  margin-top: 20px;
+
+  /* Background & Shape */
+  background: #ffffff;
+  border-radius: 16px;
+
+  /* Border & Shadow */
+  border: 1px solid #e5e7eb;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* Typography */
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1f2937;
+
+  /* Animation */
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+
+  /* UX */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover polish */
+.edit-form:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.12),
+    0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================
+   FORM ITEMS
+========================================= */
+.edit-form .form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Labels */
+.edit-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  letter-spacing: 0.3px;
+}
+
+/* Inputs */
+.edit-form input,
+.edit-form textarea,
+.edit-form select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #d1d5db;
+  font-size: 14px;
+  color: #1f2937;
+  background: #f9fafb;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    transform 0.15s ease;
+}
+
+/* Focus effect */
+.edit-form input:focus,
+.edit-form textarea:focus,
+.edit-form select:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Placeholder */
+.edit-form input::placeholder,
+.edit-form textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* =========================================
+   FORM BUTTONS
+========================================= */
+.edit-form .form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* Save Button */
+.edit-form .save-btn {
+  padding: 10px 20px;
+  background: #10b981;
+  color: #ffffff;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+
+  transition: 
+    background 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.25s ease;
+}
+
+.edit-form .save-btn:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+/* Cancel Button */
+.edit-form .cancel-btn {
+  padding: 10px 20px;
+  background: #ef4444;
+  color: #ffffff;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+
+  transition: 
+    background 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.25s ease;
+}
+
+.edit-form .cancel-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 768px) {
+  .edit-form {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .edit-form .form-buttons {
+    flex-direction: column;
+  }
+
+  .edit-form button {
+    width: 100%;
+  }
+}
+
+
+/* =====================================================
+   STATUS BADGES
+===================================================== */
+.status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.applied { background: #e0f2fe; color: #075985; }
+.status.shortlisted { background: #dcfce7; color: #166534; }
+.status.interview { background: #ede9fe; color: #5b21b6; }
+.status.rejected { background: #fee2e2; color: #991b1b; }
+.status.hired { background: #dbeafe; color: #1e40af; }
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 900px) {
+  .jobs-layout {
+    flex-direction: column;
+  }
+
+  .jobs-right {
+    display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .actions,
+  .job-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,144 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f5f6fa;
+  color: #333;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Login Page */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+.login-page button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: #fff;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 12px 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar .search-filter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Job Cards */
+.job-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.job-card:hover {
+  transform: translateY(-3px);
+}
+
+.job-card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.job-card p {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.job-card .job-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Recruiter Sidebar */
+.recruiter-layout {
+  display: flex;
+}
+
+.recruiter-sidebar {
+  width: 220px;
+  background-color: #2c3e50;
+  color: #fff;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+}
+
+.recruiter-sidebar a {
+  display: block;
+  padding: 12px 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.recruiter-sidebar a:hover {
+  background-color: #34495e;
+}
+
+.recruiter-content {
+  margin-left: 220px;
+  padding: 20px;
+  width: calc(100% - 220px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .recruiter-sidebar {
+    width: 180px;
+  }
+
+  .recruiter-content {
+    margin-left: 180px;
+  }
+}

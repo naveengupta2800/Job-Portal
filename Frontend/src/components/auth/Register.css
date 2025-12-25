@@ -1,0 +1,131 @@
+/* FULL PAGE SPLIT WRAPPER */
+.register-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* LEFT IMAGE */
+.register-image {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px;
+  color: #fff;
+}
+
+.image-overlay h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  width: 70%;
+}
+
+.image-overlay p {
+  font-size: 18px;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+/* RIGHT FORM */
+.register-form-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fb;
+}
+
+/* AUTH CARD */
+.auth-card {
+  background: #fff;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 18px;
+}
+
+.auth-form input,
+.auth-form select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  background: #6d5dfc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-primary:hover { background: #5847f9; }
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  background: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.switch {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.switch span {
+  color: #6d5dfc;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .register-wrapper {
+    flex-direction: column;
+  }
+
+  .register-image {
+    min-height: 260px;
+  }
+
+  .image-overlay {
+    padding: 30px;
+  }
+}
