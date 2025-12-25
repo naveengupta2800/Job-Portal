@@ -7,7 +7,7 @@ const connectDB = require("./config/db");
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
-const jobsRoutes = require("./routes/jobsRoutes"); // make sure file name matches exactly
+const jobsRoutes = require("./routes/jobsRoutes");
 const applyRoutes = require("./routes/applyRoutes");
 const saveJobRoutes = require("./routes/saveJobRoutes");
 const profileRoutes = require("./routes/profileRoutes");
@@ -15,45 +15,51 @@ const profileRoutes = require("./routes/profileRoutes");
 // Initialize app
 const app = express();
 
-// Middleware
+// -------------------- IMPORTANT --------------------
+// TRUST PROXY for Render cookies
+app.set("trust proxy", 1);
+
+// Body Parsers
 app.use(express.json());
-// Express backend example
-app.use(cors({
-  origin: "http://localhost:5173", // frontend URL
-  credentials: true,
-}));
+app.use(express.urlencoded({ extended: true }));
 
+// -------------------- CORS FIX --------------------
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://job-portal-naveengupta2800s-projects.vercel.app"
+    ],
+    credentials: true,
+  })
+);
 
+// -------------------- SESSION --------------------
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", 
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
 
-
-// Session setup
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-  cookie: {
-    httpOnly: true,
-    secure: false,         // localhost ke liye false
-    sameSite: "lax",      // cross-origin support
-    maxAge: 24 * 60 * 60 * 1000,
-  }
-}));
-
-
-
-
-// Connect to MongoDB
+// -------------------- DB CONNECT --------------------
 connectDB();
 
-// Mount routes
+// -------------------- ROUTES --------------------
 app.use("/api/auth", authRoutes);
-app.use("/api/jobs", jobsRoutes); 
+app.use("/api/jobs", jobsRoutes);
 app.use("/api/apply", applyRoutes);
 app.use("/api/save", saveJobRoutes);
-app.use("/api/profile",profileRoutes);
+app.use("/api/profile", profileRoutes);
 app.use("/uploads", express.static("uploads"));
-
 
 // Test route
 app.get("/", (req, res) => {
@@ -66,6 +72,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Server Error" });
 });
 
-
+// -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);
