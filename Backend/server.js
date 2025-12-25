@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 // ------------ CORS (FINAL STABLE) ------------
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://job-portal-naveengupta2800s-projects.vercel.app"
+  "https://job-portal-plum-alpha.vercel.app"
 ];
 
 app.use(
