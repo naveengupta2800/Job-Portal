@@ -402,8 +402,11 @@
 }
 .grid {
   display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 25px;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
 }
 
 /* MAIN CARD */
