@@ -21,10 +21,29 @@ exports.register = async (req, res) => {
     if (!["jobseeker", "recruiter"].includes(role))
       return res.status(400).json({ message: "Invalid role" });
 
-    email = email.toLowerCase();
-    const exist = await User.findOne({ email });
-    if (exist) return res.status(400).json({ message: "Email exists" });
+    email = email.toLowerCase().trim();
 
+    let exist = await User.findOne({ email });
+
+    // --- If user exists and already verified ----
+    if (exist && exist.isVerified) {
+      return res.status(400).json({ message: "Email exists" });
+    }
+
+    // --- If user exists but NOT verified → resend OTP ---
+    if (exist && !exist.isVerified) {
+      const newOtp = generateOTP();
+      exist.otp = newOtp;
+      exist.otpExpire = new Date(Date.now() + 10 * 60 * 1000);
+      await exist.save();
+
+      req.session.email = email;
+      await sendEmail(email, "Verify OTP", `Your OTP is ${newOtp}`);
+
+      return res.json({ message: "OTP resent" });
+    }
+
+    // --- Fresh user registration ---
     const hashedPassword = await bcrypt.hash(password, 10);
     const otp = generateOTP();
     const otpExpire = new Date(Date.now() + 10 * 60 * 1000);
@@ -36,6 +55,7 @@ exports.register = async (req, res) => {
       role,
       otp,
       otpExpire,
+      isVerified: false
     });
 
     await user.save();
@@ -44,6 +64,7 @@ exports.register = async (req, res) => {
     await sendEmail(email, "Verify OTP", `Your OTP is ${otp}`);
 
     res.json({ message: "Registered, OTP sent" });
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" });
@@ -145,4 +166,3 @@ exports.getUserRole = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
